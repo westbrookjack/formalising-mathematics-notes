@@ -33,34 +33,69 @@ and the following tactics may also be useful:
 variable (P Q R : Prop)
 
 example : ¬True → False := by
-  sorry
+  intro h
+  apply h
+  trivial
+
+
 
 example : False → ¬True := by
-  sorry
+  intro h1
+  change True → False
+  intro h2
+  exact h1
 
 example : ¬False → True := by
-  sorry
+  trivial
 
 example : True → ¬False := by
-  sorry
+    intro h1
+    change False→False
+    intro h2
+    exact h2
 
 example : False → ¬P := by
-  sorry
+  intro hF
+  exfalso
+  exact hF
 
 example : P → ¬P → False := by
-  sorry
+  intro hP hNP
+  apply hNP
+  exact hP
 
 example : P → ¬¬P := by
-  sorry
+  intro hP
+  change (P→False)→False
+  intro h
+  apply h at hP
+  exact hP
 
 example : (P → Q) → ¬Q → ¬P := by
-  sorry
+  intro h1 h2
+  change P →False
+  intro hP
+  apply h1 at hP
+  apply h2
+  exact hP
 
 example : ¬¬False → False := by
-  sorry
+  intro h
+  apply h
+  change False → False
+  intro hF
+  exact hF
 
 example : ¬¬P → P := by
-  sorry
+  intro h
+  by_contra hnP
+  apply h
+  exact hnP
+
 
 example : (¬Q → ¬P) → P → Q := by
-  sorry
+  intro h1 hP
+  by_contra hnQ
+  apply h1 at hnQ
+  apply hnQ
+  exact hP

@@ -25,32 +25,99 @@ and also the following two new tactics:
 variable (P Q R S : Prop)
 
 example : P ↔ P := by
-  sorry
+  rfl
 
 example : (P ↔ Q) → (Q ↔ P) := by
-  sorry
+  intro h
+  rw [h]
 
 example : (P ↔ Q) ↔ (Q ↔ P) := by
-  sorry
+  constructor
+
+  intro h1
+  rw[h1]
+
+  intro h2
+  rw[h2]
+
 
 example : (P ↔ Q) → (Q ↔ R) → (P ↔ R) := by
-  sorry
+  intro h1 h2
+  rwa[h1]
+
   -- The pattern `rw` then `assumption` is common enough that it can be abbreviated to `rwa`
 
 example : P ∧ Q ↔ Q ∧ P := by
-  sorry
+  constructor
+  intro h
+  constructor
+  exact h.2
+  exact h.1
+
+  intro h
+  constructor
+  exact h.2
+  exact h.1
 
 example : (P ∧ Q) ∧ R ↔ P ∧ Q ∧ R := by
-  sorry
+  constructor
+
+  rintro ⟨left, right⟩
+  constructor
+  exact left.1
+
+  constructor
+  exact left.2
+  exact right
+
+  rintro ⟨left, right⟩
+  constructor
+  constructor
+  exact left
+  exact right.1
+  exact right.2
+
+
 
 example : P ↔ P ∧ True := by
-  sorry
+  constructor
+  intro hP
+  constructor
+  exact hP
+  trivial
+
+  intro h
+  exact h.1
 
 example : False ↔ P ∧ False := by
-  sorry
+  constructor
+
+  intro hF
+  exfalso
+  exact hF
+
+  rintro⟨left, right⟩
+  exfalso
+  exact right
 
 example : (P ↔ Q) → (R ↔ S) → (P ∧ R ↔ Q ∧ S) := by
-  sorry
+  intro h1 h2
+
+  rw[h1]
+  rw[h2]
 
 example : ¬(P ↔ ¬P) := by
-  sorry
+  rintro⟨left, right⟩
+  by_cases hP : P
+
+  have h1 : ¬P := by
+    apply left
+    exact hP
+  apply h1
+  exact hP
+
+  have h2 : P := by
+    apply right
+    exact hP
+  apply hP
+  exact h2

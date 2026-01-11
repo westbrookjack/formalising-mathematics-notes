@@ -32,46 +32,139 @@ example : P → P ∨ Q := by
   exact hP
 
 example : Q → P ∨ Q := by
-  sorry
+  intro h
+  right
+  exact h
 
 -- Here are a few ways to break down a disjunction
 example : P ∨ Q → (P → R) → (Q → R) → R := by
-  intro hPoQ
+  intro hPoQ hPR hQR
   cases hPoQ with
-  | inl h => sorry
-  | inr h => sorry
+  | inl h => apply hPR at h; exact h
+  | inr h => apply hQR at h; exact h
 
 example : P ∨ Q → (P → R) → (Q → R) → R := by
-  intro hPoQ
+  intro hPoQ hPR hQR
   obtain h | h := hPoQ
-  · sorry
-  · sorry
+  · apply hPR
+    exact h
+  · apply hQR
+    exact h
 
 example : P ∨ Q → (P → R) → (Q → R) → R := by
-  rintro (h | h)
-  · sorry
-  · sorry
+  rintro (h | h) hPR hQR
+  · apply hPR
+    exact h
+  · apply hQR
+    exact h
 
 -- symmetry of `or`
 example : P ∨ Q → Q ∨ P := by
-  sorry
+  rintro (h | h)
+  · right
+    exact h
+  · left
+    exact h
 
 -- associativity of `or`
 example : (P ∨ Q) ∨ R ↔ P ∨ Q ∨ R := by
-  sorry
+  constructor
+  rintro (h1 | h1)
+  · obtain h2 | h2 := h1
+    · left
+      exact h2
+    · right; left
+      exact h2
+  · right; right
+    exact h1
+  rintro (h1 | h1)
+  · left; left
+    exact h1
+  · obtain h2 | h2 := h1
+    · left; right
+      exact h2
+    · right
+      exact h2
+
+
+
 
 example : (P → R) → (Q → S) → P ∨ Q → R ∨ S := by
-  sorry
+  intro hPR hQS
+  rintro (h | h)
+  · left
+    apply hPR
+    exact h
+  · right
+    apply hQS
+    exact h
+
+
 
 example : (P → Q) → P ∨ R → Q ∨ R := by
-  sorry
+  intro hPQ
+  rintro (h | h)
+  · left
+    apply hPQ
+    exact h
+  · right
+    exact h
 
 example : (P ↔ R) → (Q ↔ S) → (P ∨ Q ↔ R ∨ S) := by
-  sorry
+  intro h1 h2
+  rw[h1]
+  rw[h2]
+
+
 
 -- de Morgan's laws
 example : ¬(P ∨ Q) ↔ ¬P ∧ ¬Q := by
-  sorry
+  constructor
+
+  intro h
+  constructor
+  by_contra hP
+  have hPoQ : P ∨ Q := by
+    left
+    exact hP
+  apply h
+  exact hPoQ
+
+  by_contra hQ
+  apply h
+  right
+  exact hQ
+
+  rintro⟨left, right⟩
+  by_contra h
+  obtain h1 | h1 := h
+  · apply left
+    exact h1
+  · apply right
+    exact h1
 
 example : ¬(P ∧ Q) ↔ ¬P ∨ ¬Q := by
-  sorry
+  constructor
+
+  intro h
+  by_cases hP : P
+
+  right
+  by_contra hQ
+  apply h
+  constructor
+  exact hP
+  exact hQ
+
+  left
+  exact hP
+
+  intro h
+  by_contra hC
+  obtain ⟨left, right⟩ := hC
+
+  obtain h1 | h1 := h
+  · apply h1
+    exact left
+  · apply h1
+    exact right

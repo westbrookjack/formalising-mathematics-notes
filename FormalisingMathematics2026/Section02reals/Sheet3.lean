@@ -105,13 +105,13 @@ theorem tendsTo_add_const {a : ℕ → ℝ} {t : ℝ} (c : ℝ) (h : TendsTo a t
   rw [tendsTo_def] at h
   rw [tendsTo_def]
   intro ε hε
-  have h' := h ε hε
-  cases' h' with B hB
+  specialize h ε hε
+  cases' h with B hB
   use B
   intro n hI
-  have h'' := hB n hI
+  specialize hB n hI
   ring_nf
-  exact h''
+  exact hB
 
 
 -- you're not quite ready for this one yet though.

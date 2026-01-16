@@ -42,7 +42,7 @@ def myFavouriteNumber : ℕ := 7
 /-- For any expression in Lean, I can use `sorry` as a placeholder to mean "I'll fill this in
 later". Any definition or proof that uses `sorry` will give a warning. Let's fill this one in now
 with your favourite number! -/
-def yourFavouriteNumber : ℕ := sorry
+def yourFavouriteNumber : ℕ := 11
 
 #check myFavouriteNumber
 
